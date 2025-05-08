@@ -4,7 +4,7 @@ class AnimalAdapter extends Pet {
 
 	private ExoticAnimal exoticAnimal;
 	Boolean adopted = false;
-	int id = 0;
+	int num = 0;
 	
 	public AnimalAdapter(ExoticAnimal exoticAnimal) {
 		this.exoticAnimal = exoticAnimal;
@@ -62,11 +62,11 @@ class AnimalAdapter extends Pet {
 	
 	@Override
 	public int getId() {
-		return id;
+		return num;
 	}
 	
 	@Override
-	public void setId(int id) {
-		this.id = id;
+	public void setId(int num) {
+		this.num = num;
 	}
 };
