@@ -9,24 +9,25 @@ class Shelter<T extends Pet> {
 		this.shelterList = new ArrayList<>();
 	}
 	
-	public List<T> getShelterList(){
-		return shelterList;
-	}
-	
-	public void addPet(T newPet) {
-		shelterList.add(newPet);
-	}
-
 	public void sortShelterByName() {
 		Collections.sort(shelterList);
 	}
-
-	public void sortShelterByAge() {
-		Collections.sort(shelterList, new Age());
+		
+	public void addPet(T newPet) {
+		shelterList.add(newPet);
+	}
+	
+	public List<T> getShelterList(){
+		return shelterList;
 	}
 
 	public void sortShelterBySpecies() {
 		Collections.sort(shelterList, new Species());
 	}
+	
+	public void sortShelterByAge() {
+		Collections.sort(shelterList, new Age());
+	}
+
 	
 }
