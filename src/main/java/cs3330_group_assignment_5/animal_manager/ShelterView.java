@@ -1,128 +1,174 @@
 package cs3330_group_assignment_5.animal_manager;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
+import javax.swing.event.*;
 import java.awt.event.ActionListener;
 import java.util.*;
-
+import java.awt.event.ActionEvent;
+import java.awt.Color;
 import javax.swing.*;
-import javax.swing.event.*;
+import java.awt.Font;
 
 class ShelterView {
-	int sort = 0;
-	JButton button = new JButton("Name Sort");
-	JButton ageButton = new JButton("Age Sort");
-	JButton specButton = new JButton("Species Sort");
-	JButton writeButton = new JButton("Write to File");
-	JButton adoptButton = new JButton("Adopt");
+    // Sort flag
+    int sortMode = 0;
+    
+    // UI Components
+    	JButton speciesSortButton = new JButton("Species Sort");
+    	JButton removeButton = new JButton("Remove");
+    	JButton ageSortButton = new JButton("Age Sort");
 	JButton addButton = new JButton("Add New");
-	JButton remButton = new JButton("Remove");
-	JTextField name = new JTextField("");
-	JTextField age = new JTextField("");
-	JTextField type = new JTextField("");
-	JTextField species = new JTextField("");
-	JLabel adoptLabel = new JLabel("");
-	JList list;
-	private JFrame frame = new JFrame("OOP Animal Rescue");
-	private DefaultListModel<String> listModel;
-	public void initShelterView(List<Pet> shelterList) {
-		
-		listModel = new DefaultListModel<>();
-		
-		for(int i = 0; i < shelterList.size(); i++) {
-			listModel.add(i, shelterList.get(i).getName());
-		}
-		
-		list = new JList<>(listModel);		
+	JButton adoptButton = new JButton("Adopt");
+	JButton nameSortButton = new JButton("Name Sort");
+	JButton exportButton = new JButton("Write to File");
+    
+    // Input fields
+    	JTextField typeField = new JTextField("");
+    	JTextField ageField = new JTextField("");
+	JTextField nameField = new JTextField("");
+	JTextField speciesField = new JTextField("");
+    
+    // Status labels
+    	JLabel adoptionStatusLabel = new JLabel("");
+    
+    // List components
+	    JList<String> animalList;
+	    private JFrame mainWindow = new JFrame("OOP Animal Rescue");
+	    private DefaultListModel<String> animalListModel;
+    
+    /**
+     * Initializes the shelter view with the provided list of pets
+     * @param shelterList List of pets to display
+     */
+	
+    public void initShelterView(List<Pet> shelterList) {
+        // Initialize list model with pet names
+        animalListModel = new DefaultListModel<>();
+        for (int i = 0; i < shelterList.size(); i++) {
+            animalListModel.add(i, shelterList.get(i).getName());
+        }
         
-        list.setBounds(50, 50, 200, 300);
+        // Create the list component
+        animalList = new JList<>(animalListModel);
+        animalList.setBounds(50, 50, 200, 300);
+        mainWindow.add(animalList);
         
-        frame.add(list);
-        
+        // Create and position labels
         JLabel nameLabel = new JLabel("Name:");
         JLabel ageLabel = new JLabel("Age:");
         JLabel typeLabel = new JLabel("Type:");
         JLabel speciesLabel = new JLabel("Species:");
         JLabel titleLabel = new JLabel("Our Family:");
-        nameLabel.setBounds(280, 50, 100, 25);
-        ageLabel.setBounds(465, 50, 100, 25);
-        typeLabel.setBounds(287, 110, 100, 25);
+
+	typeLabel.setBounds(287, 110, 100, 25);
         speciesLabel.setBounds(442, 110, 100, 25);
         titleLabel.setBounds(50, 20, 150, 25);
         titleLabel.setFont(new Font("Arial", Font.ITALIC | Font.BOLD, 20));
-        adoptLabel.setBounds(300, 165, 75, 25);
-        name.setBounds(325, 50, 100, 25);
-        age.setBounds(500, 50, 25, 25);
-        type.setBounds(325, 110, 100, 25);
-        species.setBounds(500, 110, 115, 25);
-        frame.add(nameLabel);
-        frame.add(ageLabel);
-        frame.add(typeLabel);
-        frame.add(speciesLabel);
-        frame.add(titleLabel);
-        frame.add(adoptLabel);
-        frame.add(name);
-        frame.add(age);
-        frame.add(type);
-        frame.add(species);
+        adoptionStatusLabel.setBounds(300, 165, 75, 25);
+        nameLabel.setBounds(280, 50, 100, 25);
+        ageLabel.setBounds(465, 50, 100, 25);
+        
+        
+        // Position input fields
+        nameField.setBounds(325, 50, 100, 25);
+        speciesField.setBounds(500, 110, 115, 25);
+	ageField.setBounds(500, 50, 25, 25);
+        typeField.setBounds(325, 110, 100, 25);
+        
+        // Add labels to the frame
+        mainWindow.add(nameLabel);
+        mainWindow.add(ageLabel);
+        mainWindow.add(typeLabel);
+        mainWindow.add(speciesLabel);
+        mainWindow.add(titleLabel);
+        mainWindow.add(adoptionStatusLabel);
+        
+        // Add input fields to the frame
+        mainWindow.add(nameField);
+	mainWindow.add(speciesField); 
+	mainWindow.add(typeField);
+        mainWindow.add(ageField);
+       
+        
+        
+        // Position buttons
+	removeButton.setBounds(500, 225, 150, 25);
+        exportButton.setBounds(500, 255, 150, 25);
+        nameSortButton.setBounds(50, 355, 200, 30);
+        ageSortButton.setBounds(50, 390, 200, 30);
+        speciesSortButton.setBounds(50, 425, 200, 30);
         adoptButton.setBounds(500, 165, 150, 25);
         addButton.setBounds(500, 195, 150, 25);
-        remButton.setBounds(500, 225, 150, 25);
-        writeButton.setBounds(500, 255, 150, 25);
-        button.setBounds(50, 355, 200, 30);
-        ageButton.setBounds(50, 390, 200, 30);
-        specButton.setBounds(50, 425, 200, 30);
+        
         
         /**
-         * Displays selected list item in the text field
+         * Displays selected list item in the text fields
          */
-        list.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) { 
-				int index = list.getSelectedIndex();
-				if(index > -1 && index < shelterList.size()) {
-					name.setText(shelterList.get(index).getName());
-					age.setText(Integer.toString(shelterList.get(index).getAge()));
-					type.setText(shelterList.get(index).getType());
-					species.setText(shelterList.get(index).getSpecies());
-					if(shelterList.get(index).getAdopted() == false) {
-						adoptLabel.setText("Adopt Me!");
-						adoptLabel.setForeground(Color.GREEN);
-					}
-					else {
-						adoptLabel.setText("Not Available");
-						adoptLabel.setForeground(Color.RED);
-					}
-				}
-				else {
-					name.setText("");
-					age.setText("");
-					type.setText("");
-					species.setText("");
-					adoptLabel.setText("");
-				}
-			}
+        animalList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) { 
+                int selectedIndex = animalList.getSelectedIndex();
+                
+                if (selectedIndex > -1 && selectedIndex < shelterList.size()) {
+                    // Get the selected pet
+                    Pet selectedPet = shelterList.get(selectedIndex);
+                    
+                    // Update fields with pet information
+                    nameField.setText(selectedPet.getName());
+                    ageField.setText(Integer.toString(selectedPet.getAge()));
+                    typeField.setText(selectedPet.getType());
+                    speciesField.setText(selectedPet.getSpecies());
+                    
+                    // Update adoption status
+                    if (!selectedPet.getAdopted()) {
+                        adoptionStatusLabel.setText("Adopt Me!");
+                        adoptionStatusLabel.setForeground(Color.GREEN);
+                    } else {
+                        adoptionStatusLabel.setText("Not Available");
+                        adoptionStatusLabel.setForeground(Color.RED);
+                    }
+                } else {
+                    // Clear fields if no valid selection
+                    clearFields();
+                }
+            }
         });
         
+        // Add buttons to the frame
+	mainWindow.add(addButton);
+        mainWindow.add(removeButton);
+        mainWindow.add(ageSortButton);
+        mainWindow.add(speciesSortButton);
+        mainWindow.add(exportButton);
+        mainWindow.add(nameSortButton);
+        mainWindow.add(adoptButton);
         
-        frame.add(button);
-        frame.add(adoptButton);
-        frame.add(addButton);
-        frame.add(remButton);
-        frame.add(ageButton);
-        frame.add(specButton);
-        frame.add(writeButton);
-        frame.setSize(800, 500);
-        frame.setLayout(null);
-        frame.setVisible(true);
-	}
-	
-	
+        
+        // Configure and display the window
+        mainWindow.setSize(800, 500);
+        mainWindow.setLayout(null);
+        mainWindow.setVisible(true);
+    }
+    
+    /**
+     * Clears all input fields and status labels
+     */
+    private void clearFields() {
+	    adoptionStatusLabel.setText("");
+	    ageField.setText("");
+	    typeField.setText("");
+	    speciesField.setText("");
+            nameField.setText("");
+    }
+    
+    /**
+     * Updates the list display with the current shelter list
+     * @param shelterList Updated list of pets
+     */
+    
 	public void updateList(List<Pet> shelterList) {
-		listModel.clear();
-		for(int i = 0; i < shelterList.size(); i++) {
-			listModel.add(i, shelterList.get(i).getName());
-		}
-	}
+        animalListModel.clear();
+        for (int i = 0; i < shelterList.size(); i++) {
+            animalListModel.add(i, shelterList.get(i).getName());
+        }
+    }
 }
